@@ -1,0 +1,163 @@
+{% extends '../includes/base-main.html' %}
+{% load static %}
+{% block content %}
+{% include './header.html' %}
+<p class='text-title' {% if request.path == "/" %}style='max-width: 90%; margin: 50px auto;' {% endif %}>История операций</p>
+<form action="/" method="post" {% if request.path == '/' %}style='max-width: 90%; margin: auto;' {% endif %}>
+  {% csrf_token %}
+  <div class="row align-items-center justify-content-between filter row-gap-3">
+    <div class="col-12 col-xl-2 p-1">
+      <div class="App-big-text m-0">Фильтры</div>
+    </div>
+    <div class="col-12 col-xl-2">
+      <div class="select-holder m-auto">
+        <select class="js-select btn round w-100" name="birja" style="font-size: 16px;">
+          <option style="color: black;" {% if filter_birja == '' %}selected{% endif %}>БИРЖА</option>
+          <option style="color: black;" {% if filter_birja == 'Binance' %}selected{% endif %} value="Binance">Binance
+          </option>
+          <option style="color: black;" {% if filter_birja == 'Garantex' %}selected{% endif %} value="Garantex">Garantex
+          </option>
+        </select>
+        <input type="text" class="js-fake-input rounded-btn w-100 h-100"
+          value="{% if filter_birja %}{{filter_birja}}{% else %}БИРЖА{% endif %}" style="font-size: 16px;">
+      </div>
+    </div>
+    <div class="col-12 col-xl-2">
+        <input class="rounded-btn my-date-input text-center" id="home-date-from"
+        style="color-scheme: dark; font-size: 14px; cursor: pointer; height: 54px;" name="date"
+        type="text" value="{{ filter_date|default:"mm/dd/yyyy hh:ss"}}" onclick="event.preventDefault(); this.blur();(this.type='datetime-local'); this.focus(); this.showPicker();" onblur="this.type='text';">
+    </div>
+
+    <div class="col-12 col-xl-2 {% if request.user.type == "PR" %} hide-col{% endif %}">
+      {% if request.user.type != "PR" %}
+      <div class="select-holder m-auto">
+        <select class="js-select btn round w-100" oninput="changeValue(this.value);" name="user"
+          style="font-size: 14px;">
+          <option style="color: black;">Пользователь</option>
+          {% for user in request.user.accounts.all %}
+          <option style="color: black;" value="{{ user.id }}">{{ user.username }}</option>
+          {% endfor %}
+        </select>
+        <input type="text" class="js-fake-input rounded-btn w-100"
+          value="{% if filter_birja %}{{user}}{% else %}Пользователь{% endif %}" style="height: 54px; font-size: 14px;">
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="col-12 col-xl-2"><button type="submit" class="rounded-btn w-100">
+        <div class="text-14">ПРИМЕНИТЬ</div>
+      </button></div>
+    <div class="col-12 col-xl-2"><button class="rounded-btn w-100" name="action" value="reset">
+        <div class="text-14">СБРОСИТЬ</div>
+      </button></div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-xl-6">
+      <button class="rounded-btn w-100" type="submit" name="action" value="export"
+        style="background-color: var(--main-color); opacity: 1;">
+        <div class="App-big-text app-text-32">Интеграция торговых сделок в Excel</div>
+      </button>
+    </div>
+  </div>
+</form>
+
+
+<div class="text-center my-2 overflow-x-hidden overflow-y-hiden p-1" style="background: rgba(12, 12, 12, 0.2);"
+  id="home-row">
+  <div class="row justify-content-around ">
+    <div class="col-3 p-0">
+      <div class="App-big-text app-text-20 bold">Время</div>
+    </div>
+    <div class="col-1 p-0">
+      <div class="App-big-text app-text-20 bold">Валюта</div>
+    </div>
+    <div class="col-1 p-0">
+      <div class="App-big-text app-text-20 bold">Цена</div>
+    </div>
+    <div class="col-1">
+      <div class="App-big-text app-text-20 bold">Кол-во</div>
+    </div>
+    <div class="col-2">
+      <div class="App-big-text app-text-20 bold">Сумма</div>
+    </div>
+    <div class="col-1">
+      <div class="App-big-text app-text-20 bold">Тип</div>
+    </div>
+  </div>
+</div>
+<div class="history-items overflow-x-hidden overflow-y-scroll">
+  {% for item in history %}
+  <div class="row py-4 justify-content-around text-center m-auto big-row">
+    <div class="col-auto col-lg-3">
+      <div class="App-link">{{ item.created_at|date:"d.m.Y H:s" }}</div>
+    </div>
+    <div class="col col-lg-1">
+      <div class="App-link">{{ item.currency }}</div>
+    </div>
+    <div class="col col-lg-1">
+      <div class="App-link">{{ item.price }}</div>
+    </div>
+    <div class="col col-lg-1">
+      <div class="App-link">{{ item.volume }}</div>
+    </div>
+    <div class="col col-lg-2">
+      <div class="App-link">{{ item.total_price }}</div>
+    </div>
+    <div class="col col-lg-1">
+      <div class="App-link">{{ item.side }}</div>
+    </div>
+  </div>
+  <div class="row small-row row-gap-3 justify-content-around">
+    <div class="col-12 h-100 App-link">Время: {{ item.created_at|date:"d.m.Y H:s" }}</div>
+    <div class="col-12 h-100 App-link">Валюта: {{ item.currency }}</div>
+    <div class="col-12 h-100 App-link">Цена: {{ item.price }}</div>
+    <div class="col-12 h-100 App-link">Сумма: {{ item.total_price }}</div>
+    <div class="col-12 h-100 App-link">Тип: {{item.side}}</div>
+    <div class="col-12 h-100 App-link">Кол-во: {{ item.volume }}</div>
+  </div>
+  <div id="line"></div>
+  {% endfor %}
+</div>
+<footer style="height: 100px;" class="footer-hide"></footer>
+<script>
+  function btnWidth() {
+    var width = screen.width;
+    if (width < 1200) {
+      document.documentElement.style.fontSize = '6px';
+      var myWidth = (0.9 * width);
+      document.getElementsByClassName('my-date-input')[0].style.width = myWidth + 'px';
+    } else {
+      document.documentElement.style.fontSize = '16px';
+      document.getElementsByClassName('my-date-input')[0].style.width = '100%';
+    }
+  }
+  addEventListener("resize", btnWidth)
+  btnWidth();
+
+  const inputs = document.getElementsByClassName('js-fake-input');
+  const selects = document.getElementsByClassName('js-select');
+
+  for (let i = 0; i < inputs.length; i++) {
+    getSelected(i);
+    selects[i].addEventListener("change", function () {
+      getSelected(i);
+    });
+  }
+
+  function getSelected(i) {
+    inputs[i].value = selects[i].options[selects[i].selectedIndex].text;
+  }
+
+  // function getDate() {
+  //   let event = document.getElementById('holder1')
+  //   let input = document.getElementById(event.getAttribute('data-id'));
+  //   let span = document.getElementById(event.getAttribute('data-id') + '-span')
+  //   input.addEventListener('input', () => {
+  //     span.textContent = input.value;
+  //   })
+  //   input.showPicker();
+  // }
+  // let item = document.getElementById('holder1')
+  // item.addEventListener('click', getDate)
+</script>
+{% endblock %}

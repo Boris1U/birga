@@ -1,0 +1,231 @@
+{% extends '../includes/base-main.html' %}
+{% load static %}
+{% block content %}
+{% include './header.html' %}
+<div class="row align-items-center">
+    <div class="col">
+        <p class="text-title">Статистика</p>
+    </div>
+    {% if request.user.type != 'PR' %}
+    <div class="col-4 p-0">
+        <div class="select-holder m-auto">
+            <select class="js-select btn round w-100" name="user" style="font-size: 14px;">
+                <option selected>Выбрать аккаунт</option>
+                {% for user in request.user.accounts.all %}
+                <option style="color: black;" value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" class="js-fake-input rounded-btn w-100" style="height: 60px; font-size: 32px; font-weight: 400;">
+        </div>
+    </div>
+    {% endif %}
+</div>
+<form action="{% url 'statistics_page' %}" class="my-4" method="post">
+    {% csrf_token %}
+    <div class="row align-items-center justify-content-between gap-3">
+        <div class="col-12 col-xl-2 p-0 me-2">
+            <div class="select-holder m-auto">
+                <select class="js-select btn round w-100" name="filter_hour" style="font-size: 14px;">
+                    <option style="color: black;" {% if filter_hour == '' %}selected{% endif %}>ПЕРИОД</option>
+                    <option style="color: black;" {% if filter_hour == '1' %}selected{% endif %} value="1">1 ЧАС</option>
+                    <option style="color: black;" {% if filter_hour == '6' %}selected{% endif %} value="6">6 ЧАСОВ</option>
+                    <option style="color: black;" {% if filter_hour == '12' %}selected{% endif %} value="12">12 ЧАСОВ</option>
+                </select>
+                <input type="text" class="js-fake-input rounded-btn w-100" style="height: 60px; font-size: 14px;">
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-2 p-0">
+            <input class="rounded-btn my-date-input text-center" id="home-date-from"
+            style="color-scheme: dark; font-size: 14px; cursor: pointer; height: 54px;" name="from_date"
+            type="text" value="{{ from_date|default_if_none:"mm/dd/yyyy hh:ss"}}" onclick="event.preventDefault(); this.blur();
+            (this.type='datetime-local'); this.focus(); this.showPicker();" oninput="validateDateTime();" onblur="this.type='text';">
+        </div>
+            
+        <div class="col-12 col-xl-2 p-0">
+            <input class="rounded-btn my-date-input text-center" id="home-date-from"
+            style="color-scheme: dark; font-size: 14px; cursor: pointer; height: 54px;" name="to_date"
+            type="text" value="{{ to_date|default_if_none:"mm/dd/yyyy hh:ss"}}" onclick="event.preventDefault(); this.blur();
+            (this.type='datetime-local'); this.focus(); this.showPicker();" oninput="validateDateTime();" onblur="this.type='text';">
+        </div>
+        <div class="col-12 col-xl-2 p-0 me-2"><button type="submit" class="rounded-btn w-100 p-0" style="height: 60px;"><div class="stats-text-32">Применить</div></button></div>
+        <div class="col-12 col-xl-2 p-0"><button class="rounded-btn w-100 p-0" name="action" value="reset" style="height: 60px;"><div class="stats-text-32">Сбросить</div></button></div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="my-styled-card p-5" style="margin-bottom: 30px;">
+        <div class="row my-4">    
+            <div class="col-auto col-sm-6 flex-grow-1 flex-sm-grow-0">
+                <div class="App-big-text bold app-text-48">Общий объем покупок</div>
+            </div>
+            <div class="col-auto">
+                <div class="App-big-text app-text-48">{{ all_buys }} ₽</div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-auto col-sm-6 flex-grow-1 flex-sm-grow-0"">
+                <div class="App-big-text bold app-text-48">Общий объем продаж</div>
+            </div>
+            <div class="col-auto">
+                <div class="App-big-text app-text-48">{{ all_sells }} ₽</div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-auto col-sm-6 flex-grow-1 flex-sm-grow-0">
+                <div class="App-big-text bold app-text-48">Доход</div>
+            </div>
+            <div class="col-auto">
+                <div class="App-big-text app-text-48">{{ all_profit }} ₽</div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-auto col-sm-6 flex-grow-1 flex-sm-grow-0">
+                <div class="App-big-text bold app-text-48">Общий спред</div>
+            </div>
+                <div class="col-auto">
+                    <div class="App-big-text app-text-48">{{ all_spred }}%</div>
+                </div>
+            </div>
+        <div class="row my-4">
+            <div class="col-auto col-sm-6 flex-grow-1 flex-sm-grow-0">
+                <div class="App-big-text bold app-text-48">Количество сделок</div>
+            </div>
+            <div class="col-auto">
+                <div class="App-big-text app-text-48">{{ all_count }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row gap-3" style="margin-bottom: 50px;">
+    <div class="my-styled-card p-5 col-auto flex-grow-1">
+        <div class="row my-4">
+            <div class="col">
+                <div class="App-big-text app-text-48 bold" style="color: var(--main-color);">Лучший день</div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col"><div class="App-big-text bold">Дата</div></div>
+            <div class="col-auto col-xl-auto">
+                <div class="App-big-text stats-text-32 text-end">{{best_day.date}}</div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col">
+                <div class="App-big-text bold">Спред</div>
+            </div>
+            <div class="col">
+                <div class="App-big-text stats-text-32 text-end">{{best_day.spred}} %</div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col">
+                <div class="App-big-text bold">Доход</div>
+            </div>
+            <div class="col">
+                <div class="App-big-text stats-text-32 text-end">{{ best_day.profit }} ₽</div>
+            </div>
+        </div>
+    </div>
+    <div class="my-styled-card p-5 col-auto flex-grow-1">
+        <div class="row my-4">
+            <div class="col">
+                <div class="App-big-text app-text-48 bold" style="color: var(--main-color);">Лучший месяц</div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-auto flex-grow-1">
+                <div class="App-big-text bold">Дата</div>
+            </div>
+            <div class="col-auto text-end">
+                <div class="App-big-text stats-text-32">{{ best_month.date }}</div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-auto flex-grow-1">
+                <div class="App-big-text bold">Количество сделок</div>
+            </div>
+            <div class="col-auto text-end">
+                <div class="App-big-text stats-text-32">{{ best_month.amount }}</div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-auto flex-grow-1">
+                <div class="App-big-text bold">Доход</div>
+            </div>
+            <div class="col-auto text-end">
+                <div class="App-big-text stats-text-32">{{ best_month.profit }} ₽</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  function btnWidth(){
+    var width =  screen.width;
+    console.log(screen.width);
+    console.log(getComputedStyle(document.documentElement).fontSize);
+        if (width < 1200){
+            document.documentElement.style.fontSize = '8px';
+            var myWidth = (0.9 * width + 1.5 * parseFloat(getComputedStyle(document.documentElement).fontSize));
+            console.log(1.5 * parseFloat(getComputedStyle(document.documentElement).fontSize));
+            document.getElementsByClassName('my-date-input')[0].style.width = myWidth + 'px';
+            document.getElementsByClassName('my-date-input')[1].style.width = myWidth + 'px';
+        } else {
+            document.documentElement.style.fontSize = '16px';
+            document.getElementsByClassName('my-date-input')[0].style.width = '100%';
+            document.getElementsByClassName('my-date-input')[1].style.width = '100%';
+            
+        }
+    }
+    addEventListener("resize", btnWidth)
+    btnWidth();
+
+    // document.getElementsByClassName('my-date-input')[0].style.width = '400px';
+    function validateDateTime(){
+        let from_date = document.getElementById('from_date_stats');
+        let to_date = document.getElementById('to_date_stats');
+
+        const now_date = new Date();
+        now_date.setMinutes(now_date.getMinutes() - now_date.getTimezoneOffset());
+        now_date.setMilliseconds(null);
+        now_date.setSeconds(null);
+
+
+        if (now_date < Date.parse(from_date.value)){
+            from_date.value = now_date.toISOString().slice(0,-1);
+        }
+        if (now_date < Date.parse(to_date.value)){
+            to_date.value = now_date.toISOString().slice(0,-1);
+        }
+        if (Date.parse(from_date.value) > Date.parse(to_date.value)){
+            from_date.value = to_date.value;
+        }
+    }
+    const inputs = document.getElementsByClassName('js-fake-input');
+    const selects = document.getElementsByClassName('js-select');
+
+    for (let i = 0; i < inputs.length; i++) {
+    getSelected(i);
+    selects[i].addEventListener("change", function() {
+        getSelected(i);
+    });
+    }
+
+    function getSelected(i){
+        inputs[i].value = selects[i].options[selects[i].selectedIndex].text;
+    }
+
+    function getDate(event){
+      let input = document.getElementById(event.getAttribute('data-id'));
+      input.addEventListener('input', () => {
+        event.textContent = input.value;
+      })
+      input.showPicker();
+
+    }
+</script>
+
+{% endblock %}
+

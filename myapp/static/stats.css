@@ -1,0 +1,251 @@
+.app-text-20 {
+    font-size: 20px;
+}
+
+.app-text-48 {
+    font-size: 48px;
+}
+
+.app-text-32 {
+    font-size: 32px;
+}
+
+.app-text-36 {
+    font-size: 36px;
+}
+
+.btn-dropdown {
+    border: none;
+    color: #5D5B5B;
+    content: none !important;
+}  
+
+
+.App-text-title-24{
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.App-sub-card {
+    height: 220px;
+    text-align: center;
+    padding: 10px;
+}
+.App-card-price {
+    padding: 50px 0;
+}
+
+.history-col {
+    height: 50px;
+}
+
+.row-border {
+    border-radius: 40px;
+    border-color: var(--main-color);
+    border-width: 2px;
+    border-style: solid;
+    margin: 15px;
+}
+
+.nav-link {
+    display: inline-block;
+}
+
+.img-fluid {
+    border-radius: 0px 28px 28px 0px;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .img-fluid {
+        border-radius: 0px 0px 28px 28px;
+    }
+}
+
+@media only screen and (max-width: 1200px) {   
+    .hide-col {
+        display: none;
+    }
+    .nav-link {
+        display: none;
+    }
+    #toggler {
+        display: block !important;
+        
+    }
+    .text-title {
+        margin: 15px 0;
+    }
+
+    .App-big-text {
+        margin: 3px 0;
+        line-height: 1.2em;
+    }
+    .my-card {
+        padding: 15px;
+    }
+    .rounded-btn {
+        font-size: 10px;
+    }
+    /* .App-input {
+        font-size: 10px;
+        height: 40px;
+    } */
+    .calc-btn {
+        font-size: 32px !important;
+    }
+    .row-border {
+        border-radius: 20px;
+        margin: 5px 0 5px 2px;
+    }
+    .App-card-price {
+        padding: 10px;
+    }
+    .App-sub-card {
+        height: 134px;
+    }
+    .hd {
+        display: none;
+    }
+}
+
+.calc-btn {
+    cursor: pointer;
+}
+
+.container-fluid {
+    max-width: 90%;
+    padding: 0;
+}
+
+.h1 {
+    margin-bottom: 80px;
+    font-size: 64px;
+}
+
+@media only screen and (max-width: 1400px) {
+    .hide-img {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .hide-header {
+        visibility: hidden;
+    }
+    .profile-card {
+        padding: 30px;
+        padding-top: 10px;
+        margin: 40px 0;
+    }
+    #profile-image {
+        padding-bottom: 10px;
+    }
+    .subs-card {
+        height: 200px;
+    }
+    .inp {
+        font-size: 16px !important;
+        margin: 10px 0;
+        padding: 1rem 2rem;
+    }
+
+    .h1 {
+        margin: 40px 0;
+    }
+}
+
+.my-date-input {
+    width: 100%;
+}
+
+input[type="datetime-local"],
+input.rounded-btn,
+input.rounded-btn[type="text"] {
+    text-align: center !important;
+    justify-content: center;
+    text-align: -webkit-center;
+    text-align: -moz-center;
+}
+
+input[type="datetime-local"]::-webkit,
+input.rounded-btn::-webkit-input-placeholder {
+    text-align: center !important;
+}
+/* 
+input[type="datetime-local"]::before{
+    color: #999;
+    content: attr(placeholder);
+    margin-right: 122px; 
+}
+input[type="datetime-local"]:focus::before {
+    content: "" !important;
+    display: none;
+} */
+
+
+
+@media only screen and (max-width: 1200px) {   
+    .hide-col {
+        display: none;
+    }
+    .nav-link {
+        display: none;
+    }
+    #toggler {
+        display: block !important;
+        
+    }
+    .text-title {
+        margin: 15px 0;
+    }
+
+    .App-big-text {
+        margin: 3px 0;
+        line-height: 1.2em;
+    }
+    .my-card {
+        padding: 15px;
+    }
+    .rounded-btn {
+        font-size: 10px !important;
+    }
+    /* .App-input {
+        font-size: 10px;
+        height: 40px;
+    } */
+    .calc-btn {
+        font-size: 32px !important;
+    }
+    .row-border {
+        border-radius: 20px;
+        margin: 5px 0 5px 2px;
+    }
+    .App-card-price {
+        padding: 10px;
+    }
+    .App-sub-card {
+        height: 134px;
+    }
+    .hd {
+        display: none;
+    }
+    .text-14 {
+        font-size: 10px !important;
+    }
+}
+
+@media only screen and (max-width: 600px) { 
+    .App-login-form {
+        padding: 30px 15px !important;
+    }
+    .rounded-btn {
+        font-size: 16px !important;
+    }
+    .app-text-32{
+        font-size: 10px !important;
+    }
+    /* .App-input, .App-input:disabled {
+        padding: 0 20px;
+    } */
+}

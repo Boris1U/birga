@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Umbrella</title>
+    <link rel="icon" type="image/x-icon" href="{% static './favicon.svg' %}">
+    <link href="{% static '/bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+    <script src="{% static '/bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <link href="{% static './base.css' %}" rel="stylesheet" />
+    <link href="{% static './main.css' %}" rel="stylesheet" />
+    <link href="{% static './stats.css' %}" rel="stylesheet" />
+    <!-- Font Awesome -->
+</head>
+
+<body>
+    <main class="container-fluid" {% if request.path == '/' %}style='max-width: 100%;'{% endif %}>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+<style>
+    body {
+        background: linear-gradient(0deg, rgba(14, 209, 209, 0.8) 0%, #0C0C0C 100%);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        min-height: 95vh;
+        height: 100%;
+    }
+</style>
+<script>
+//       function btnWidth(){
+//     var width = screen.width;
+//         if (width < 1200){
+//             document.documentElement.style.fontSize = '6px';
+//         } else {
+//             document.documentElement.style.fontSize = '16px';
+//         }
+//   }
+//     addEventListener("resize", btnWidth)
+//     btnWidth();
+</script>
+
+</html>

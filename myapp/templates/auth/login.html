@@ -1,0 +1,34 @@
+{% extends '../includes/base-auth.html' %}
+{% load static %}
+{% block content %}
+  {% include './header.html' %}
+  <main class="main-auth">
+    <form class='App-login-form p-5' style="z-index: 1; margin-bottom: 50px;" method="POST">
+      {% csrf_token %}
+      <p class='App-h1 m-2' style="z-index: 1;">Вход в аккаунт</p>
+      <input
+        id='login-username-input' 
+        class='App-input my-2'
+        name="username"
+        autocomplete="username" 
+        type='username'
+        placeholder='| Введите логин'  style="font-size: 20px !important;"></input>
+      <input 
+        id='login-password-input' 
+        class='App-input my-2'
+        name="password" 
+        autocomplete="current-password"
+        type='password'
+        placeholder='| Введите пароль'  style="font-size: 20px !important;"></input>
+      <div class="row my-2">
+        <div class="col-6 my-2"><a href="{% url 'registration' %}" class="w-100"><button type="button" style="font-size: 14px !important;" class='rounded-btn p-3 m-0 w-100'>Регистрация</button></a></div>
+        <div class="col-6 my-2"><button type="submit" style="font-size: 14px !important;" class='rounded-btn p-3 m-0 w-100'>Вход</button></div>
+        
+      </div>
+      
+      <a href="{% url 'password_reset' %}" style="z-index: 1;" class="App-link my-4">Сбросить пароль</a>
+      <div class='App-big-text text-20' style="z-index: 1;">{{ login_error }}</div>
+    </form>
+    
+  </main>
+{% endblock %}

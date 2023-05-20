@@ -1,0 +1,409 @@
+{% extends '../includes/base-main.html' %}
+{% load static %}
+{% block content %}
+{% include './header.html' %}
+<div class="profile-card">
+  <p class='text-title my-4 big-title' style="color: var(--main-color);">Личный кабинет</p>
+  <div class="row flex-column flex-lg-row">
+    <div class="col-auto" id="profile-image" style="position: relative;">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <img src="{% if user.image %}{{user.image.url}}{% else %}{% static 'user-logo.svg' %}{% endif %}"
+          onchange="this.form.submit();" style="border-radius: 45px;" class="img-profile" alt="">
+        <input class="w-100 h-100" name="image" type="file" accept=".jpg, .jpeg, .png" oninput="this.form.submit();" style="opacity: 0; position: absolute; left: 0; cursor: pointer;"/>
+      </form>
+    </div>
+    <div class="col-1"></div>
+    <div class="col">
+      <div class="row my-2">
+        <div class="col-6 col-md-4">
+          <div class="App-big-text app-text-32 bold">Логин</div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="App-big-text app-text-32">{{ request.user.username }}</div>
+        </div>
+      </div>
+      <div class="row my-2">
+        <div class="col-6 col-md-4">
+          <div class="App-big-text app-text-32 bold">Почта</div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="App-big-text app-text-32">{{ request.user.email }}</div>
+        </div>
+      </div>
+      <div class="row my-2">
+        <div class="col-6 col-md-4">
+          <div class="App-big-text app-text-32 bold">Пароль</div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="App-big-text app-text-32">********</div>
+        </div>
+      </div>
+      <div class="row my-2">
+        <div class="col-6 col-md-4">
+          <div class="App-big-text app-text-32 bold">Тип аккаунта</div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="App-big-text app-text-32">{{ request.user.get_type_display }}</div>
+        </div>
+      </div>
+      <div class="row my-2">
+        <div class="col-6 col-md-4">
+          <div class="App-big-text app-text-32 bold">Подписка</div>
+        </div>
+        <div class="col-6">
+          <div class="App-big-text app-text-32">
+            {% if request.user.subscription_active %}
+            Активна до {{ request.user.subscription_expiration_date }}
+            {% else %}
+            Неактивна
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="row my-2 row-gap-3">
+        <div class="col-12 col-sm-auto">
+          <a href="{% url 'password-change' %}" class="App-link" style="text-decoration: none;color: white;"><button
+              class="my-1 rounded-btn w-100 inp">Изменить пароль</button></a>
+        </div>
+        <div class="col-12 col-sm-auto">
+          <a href="{% url 'logout' %}" class="App-link" style="text-decoration: none;color: white;"><button
+              class="my-1 rounded-btn w-100 inp">Выйти из аккаунта</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="App-big-text bold h1">Привязка API</div>
+</div>
+<form action="profile" method="post">
+  <div class="row my-2 row-gap-3">
+    {% csrf_token %}
+    <input name="birja" value="binance" type="hidden" />
+    <div class="col-12 col-xl-3">
+      <div class="App-big-text">
+        <div class="span">
+          Binance
+        </div>
+      </div>
+    </div>
+    {% if request.user.binance_api %}
+    <input name="action" value="delete" type="hidden" />
+    <div class="col hide-col"></div>
+    <div class="col-12 col-xl-3"><a href="#" class="App-link" style="text-decoration: none;color: white;"><button
+          class="my-1 h-100 rounded-btn w-100">УДАЛИТЬ</button></a></div>
+    <div class="col-12 col-xl-3"><a href="#" class="App-link" style="text-decoration: none;color: white;"><button
+          class="my-1 h-100 rounded-btn w-100" disabled>ПРИВЯЗАНО</button></a></div>
+    {% else %}
+    <div class="col-12 col-xl-3"><input id="binance-secret-key" name="binance-api-secret" type="text"
+        class="my-1 h-100 App-input w-100 inp" required placeholder="| Секретный ключ"></div>
+    <div class="col-12 col-xl-3"><input id="binance-api-key" type="text" name="binance-api-key"
+        class="my-1 h-100 App-input w-100 inp" required placeholder="| API-ключ"></div>
+    <div class="col-12 col-xl-3"><a class="App-link" style="text-decoration: none;color: white;"><button type="submit"
+          class="my-1 h-100 rounded-btn w-100 inp">ПРИВЯЗАТЬ</button></a></div>
+    {% endif %}
+
+  </div>
+</form>
+<form action="profile" method="post">
+  <div class="row row-gap-3">
+    {% csrf_token %}
+    <input name="birja" value="garantex" type="hidden" />
+    <div class="col-12 col-xl-3">
+      <div class="App-big-text">Garantex</div>
+    </div>
+    {% if request.user.garantex_jwt %}
+    <input name="action" value="delete" type="hidden" />
+    <div class="col-12 col-xl-3"></div>
+    <div class="col-12 col-xl-3"><a href="#" class="App-link my-2" style="text-decoration: none;color: white;"><button
+          class="rounded-btn w-100 my-1 h-100">УДАЛИТЬ</button></a></div>
+    <div class="col-12 col-xl-3"><a href="#" class="my-2 App-link" style="text-decoration: none;color: white;"><button
+          class="rounded-btn w-100 my-1 h-100" disabled>ПРИВЯЗАНО</button></a></div>
+    {% else %}
+    <div class="col-12 col-xl-3"><input id="garantex-secret-key" required name="garantex-secret-key" type="text"
+        class="my-1 h-100 App-input w-100 inp" placeholder="| Секретный ключ"></div>
+    <div class="col-12 col-xl-3"><input id="garantex-uid" required type="text" name="garantex-uid"
+        class="my-1 h-100 App-input w-100 inp" placeholder="| UID"></div>
+    <div class="col-12 col-xl-3"><a href="#" class="App-link w-100" style="text-decoration: none;color: white;"><button
+          type="submit" class="rounded-btn w-100 my-1 h-100 inp">ПРИВЯЗАТЬ</button></a></div>
+    {% endif %}
+  </div>
+</form>
+
+{% if request.user.subscription_active %}
+<div class="App-h1 h1 big-title" style="color: var(--main-color);">Продлить</div>
+{% if request.user.type == 'PR' %}
+<div class="row">
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="1500">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">1 месяц</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">1500₽</span><br>
+              <span class="App-big-text lh-base" style="opacity: 0;">.........</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="7000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">6 месяцев</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">7000₽</span><br>
+              <span class="App-big-text lh-base" style="color: var(--main-color);">скидка 2000₽</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="12000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">12 месяцев</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">12000₽</span><br>
+              <span class="App-big-text lh-base" style="color: var(--main-color);">скидка 6000₽</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="5000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">1 месяц</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">5000₽</span><br>
+              <span class="App-big-text lh-base" style="opacity: 0;">.........</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="25000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">6 месяцев</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">25000₽</span><br>
+              <span class="App-big-text lh-base" style="color: var(--main-color);">скидка 5000₽</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="50000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">12 месяцев</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">50000₽</span><br>
+              <span class="App-big-text lh-base" style="color: var(--main-color);">скидка 10000₽</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+</div>
+{% endif %}
+{% else %}
+<div class="App-h1 h1 big-title" style="color: var(--main-color);">Оформить подписку</div>
+<div class="App-big-text bold" style="font-size: 48px;">Личная</div>
+<div class="App-big-text App-text-title-24" style="margin-bottom: 46px;">Подключить 1 пользователя</div>
+<div class="row">
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="1500">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">1 месяц</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">1500₽</span><br>
+              <span class="App-big-text lh-base" style="opacity: 0;">.........</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="7000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">6 месяцев</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">7000₽</span><br>
+              <span class="App-big-text lh-base" style="color: var(--main-color);">скидка 2000₽</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="12000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">12 месяцев</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">12000₽</span><br>
+              <span class="App-big-text lh-base" style="color: var(--main-color);">скидка 6000₽</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+</div>
+<div class="App-big-text bold" style="font-size: 48px; margin-top: 80px;">Бизнес</div>
+<div class="App-big-text App-text-title-24" style="margin-bottom: 46px;">Подключить несколько пользователей</div>
+<div class="row">
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="5000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">1 месяц</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">5000₽</span><br>
+              <span class="App-big-text lh-base" style="opacity: 0;">.........</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="25000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">6 месяцев</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">25000₽</span><br>
+              <span class="App-big-text lh-base" style="color: var(--main-color);">скидка 5000₽</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+  <div class="col-12 col-md-4">
+    <form method="POST" action="{% url 'create-payment' %}">
+      {% csrf_token %} 
+      <input type="hidden" name="cost" value="50000">
+      <a href="javascript:{}" onclick="this.closest('form').submit(); return false;" style="text-decoration: none;">
+        <div class="subs-card p-4 d-flex align-items-start flex-column mb-3">
+          <span class="mb-auto App-big-text bold lh-base app-text-48">12 месяцев</span>
+          <div class="row justify-content-between align-items-center w-100">
+            <div class="col-6">
+              <span class="App-big-text lh-base bold app-text-48">50000₽</span><br>
+              <span class="App-big-text lh-base" style="color: var(--main-color);">скидка 10000₽</span>
+            </div>
+            <div class="col-auto"><img class="vector" src="{% static 'Vector.svg' %}" alt="" srcset=""></div>
+          </div>
+        </div>
+      </a>
+    </form>
+  </div>
+</div>
+{% endif %}
+<script>
+  function sendDataBinance() {
+    let secret_key = document.getElementById('');
+  }
+  function sendDataGarantex() {
+    let secret_key = document.getElementById('garantex-secret-key').value;
+    let uid = document.getElementById('garantex-uid').value;
+
+    fetch('profile', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        garantex_secret_key: secret_key,
+        garantex_uid: uid,
+        csrfmiddlewaretoken: getCookieValue('csrftoken')
+      })
+    }).then((response) => {
+      console.log(response);
+    })
+  }
+  function getCookieValue(name) {
+    const cookies = document.cookie.split('; ');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName === name) {
+        console.log(`Found cookie ${name} with value ${cookieValue}`);
+        return cookieValue;
+      }
+    }
+    console.log(`Could not find cookie ${name}`);
+    return '';
+  }
+
+</script>
+{% endblock %}

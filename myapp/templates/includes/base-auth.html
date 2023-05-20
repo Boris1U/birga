@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" style="background-color: black;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="icon" type="image/x-icon" href="{% static './favicon.svg' %}">
+  <link href="{% static '/bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css' %}" rel="stylesheet"/>
+  <script src="{% static '/bootstrap-5.3.0-alpha3-dist/js/bootstrap.min.js' %}"></script>
+</head>
+
+<body>
+  <div class="App">
+    <video autoplay muted loop id="bgVideo">
+      <source src="{% static 'bg-video.mp4' %}" type="video/mp4">
+    </video>
+    {% block content %}
+    
+    {% endblock %}
+  </div>
+    <link href="{% static './base.css' %}" rel="stylesheet" />
+    <link href="{% static './stats.css' %}" rel="stylesheet" />
+    <link href="{% static './main.css' %}" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  </div>
+</body>
+<style>
+  .App{
+    background-color: transparent;
+    /* background: linear-gradient(0deg, rgba(14, 209, 209, 0.8) 0%, #0C0C0C 100%); */
+    /* background-attachment: scroll; */
+    background-repeat: repeat;
+  }
+</style>
+</html>

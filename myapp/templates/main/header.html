@@ -1,0 +1,30 @@
+{% load static %}
+<header {% if request.path == '/' %}style='max-width: 90%; margin: 20px auto;'{% endif %}>
+    <nav class='App-nav navbar  justify-content-between align-items-center'>
+      <a class="m-0" href="{% url 'home_page' %}"><img class="m-auto ms-0 mb-0 log-img" src="{% static './logo.svg' %}" alt="logo" /></a>
+      <a class='App-link nav-link' {% if request.path == '/news' %}active{% endif %}  href='{% url "news_page" %}'>Новости</a>
+      <a class='App-link nav-link' {% if request.path == '/calculator' %}active{% endif %} href='{% url "calculator_page" %}'>Калькулятор доходности</a>
+      <a class='App-link nav-link' {% if request.path == '/' %}active{% endif %} href='{% url "home_page" %}'>История операций</a>
+      <a class='App-link nav-link' {% if request.path == '/stats' %}active{% endif %} href='{% url "statistics_page" %}'>Статистика</a>
+      <a class='App-link nav-link' {% if request.path == '/profile' %}active{% endif %} href="{% url 'profile_page' %}">Личный кабинет</a>
+      <button class="btn align-self-end" id="toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"  style="display: none;">
+        <span class="navbar-toggler-icon" style="background-image: url({% static 'burger.svg' %}); height: 24px; width: 24px;"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel"
+      style="background-color: var(--black-color);">
+        <div class="offcanvas-header">
+          <p></p>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" style="background-color: var(--main-color);"></button>
+        </div>
+        <div class="offcanvas-body align-items-center justify-content-around hide-canvas">
+          <div class="list-group">
+          <a class='App-link my-2' {% if request.path == '/news' %}active{% endif %}  href='{% url "news_page" %}'>Новости</a>
+          <a class='App-link my-2' {% if request.path == '/calculator' %}active{% endif %} href='{% url "calculator_page" %}'>Калькулятор доходности</a>
+          <a class='App-link my-2' {% if request.path == '/' %}active{% endif %} href='{% url "home_page" %}'>История операций</a>
+          <a class='App-link my-2' {% if request.path == '/stats' %}active{% endif %} href='{% url "statistics_page" %}'>Статистика</a>
+          <a class='App-link my-2' {% if request.path == '/profile' %}active{% endif %} href="{% url 'profile_page' %}">Личный кабинет</a>
+        </div>
+        </div>
+      </div>
+    </nav>
+</header>

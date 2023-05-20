@@ -1,0 +1,26 @@
+{% load static %}
+<header class="App-header navbar justify-content-center bg-body-tertiary" style="max-height: 100vh; margin-bottom: 75px; padding-top: 146.32px;">
+  <!-- <nav class='App-nav justify-content-end hide-col' style="opacity: 0;">
+    <a>ВХОД</a>
+    <a>РЕГИСТРАЦИЯ</a>
+  </nav> -->
+    <a href='{% url "login" %}'><img src="{% static './big-logo1.svg' %}" class="log-img" alt="logo" width="541px" /></a>
+    <!-- <nav class='App-nav justify-content-end'>
+      <a class="App-link hd" {% if request.path == '/login' %}active{% endif %} href='{% url "login" %}'>ВХОД</a>
+      <a class="App-link hd" {% if request.path == '/registration' %}active{% endif %} href='{% url "registration" %}'>РЕГИСТРАЦИЯ</a>
+      <button class="btn align-self-end" id="toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"  style="display: none;">
+        <span class="navbar-toggler-icon" style="background-image: url({% static 'burger.svg' %});"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel"
+      style="background-color: var(--black-color);">
+        <div class="offcanvas-header">
+          <p></p>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" style="background-color: var(--main-color);"></button>
+        </div>
+        <div class="offcanvas-body">
+          <p><a class='App-link p-0 m-auto mb-0' {% if request.path == '/login' %}active{% endif %}  href='{% url "login" %}'>Вход</a></p>
+          <p><a class='App-link p-0 m-auto mb-0' {% if request.path == '/registration' %}active{% endif %} href='{% url "registration" %}'>Регистрация</a></p>
+        </div>
+      </div>
+    </nav> -->
+</header>

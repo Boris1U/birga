@@ -1,0 +1,155 @@
+{% extends '../includes/base-main.html' %}
+{% load static %}
+
+{% block content %}
+{% include './header.html' %}
+<p class='text-title'>Калькулятор доходности</p>
+<main>
+  <div class="row align-items-center justify-content-between">
+    <div class="col-12 col-xl-4">
+      <div class="App-big-text app-text-48 bold">Валюта</div>
+    </div>
+    {% for item in prices %}
+      <div class="col-auto col-md-4 col-xl-2">
+        <button id="btn-{{forloop.counter}}" onclick="buttonClick(this);" value="{{ item.price }}" class="rounded-btn {% if forloop.first %}rounded-btn-active{% endif %} text-20 w-100 my-2" value="{{ prices.BTCRUB }}"><div class="app-text-32">{{ item.symbol }}</div></button>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="row align-items-center my-4 row-gap-3">
+    <div class="col-12 col-xl-4">
+      <div class="App-big-text app-text-48 bold">Курс покупки</div>
+    </div>
+    <div class="col-12 col-xl-4">
+      <input type="number" oninput="calculate();" min="0" id="buy-course" class="App-input w-100 app-text-32" value="{{prices.0.price}}" placeholder="курс покупки" />
+    </div>
+    <div class="col-auto col-sm-5 col-xxl-2">
+      <div class="App-big-text lh-44 fw-normal opacity-50">комиссия при покупке</div>
+    </div>
+    <div class="col d-flex justify-content-around">
+      <div id="buy-minus" value="-" onclick="changeCom(this);calculate();" class="App-big-text calc-btn">-</div>
+      <input id="buy-com" class="App-com-input p-0" disabled value="0.00%" />
+      <div id="buy-plus" value="+" onclick="changeCom(this);calculate();" class="App-big-text calc-btn">+</div>
+    </div>
+  </div>
+  <div class="row align-items-center my-4 row-gap-3">
+    <div class="col-12 col-xl-4">
+      <div class="App-big-text app-text-48 bold">Курс продажи</div>
+    </div>
+    <div class="col-12 col-xl-4">
+      <input type="number" oninput="calculate();" min="0" id="sell-course" class="App-input w-100 App-big-text" placeholder="курс продажи" />
+    </div>
+    <div class="col-auto col-sm-5 col-xxl-2">
+      <div class="App-big-text lh-44 fw-normal opacity-50">комиссия при продаже</div>
+    </div>
+    <div class="col d-flex justify-content-around">
+      <div id="sell-minus" value="-" onclick="changeCom(this); calculate();" class="App-big-text calc-btn">-</div>
+      <input id="sell-com" class="App-com-input p-0" disabled value="0.00%" />
+      <div id="sell-plus" value="+" onclick="changeCom(this); calculate();" class="App-big-text calc-btn">+</div>
+    </div>
+  </div>
+  <div class="row align-items-center my-4 row-gap-3">
+    <div class="col-6 col-xl-4">
+      <div class="App-big-text app-text-48 bold">Спред</div>
+    </div>
+    <div class="col-6 col-xl-4 text-end">
+      <input type="text" oninput="calculate();" min="0" disabled id="spred" class="App-input w-100 App-big-text" value="0%"/>
+    </div>
+    <div class="col-xl-4"></div>
+  </div>
+  <div class="row align-items-center my-4 row-gap-3">
+    <div class="col-12 col-xl-4">
+      <div class="App-big-text app-text-48 bold">Сумма покупки</div>
+    </div>
+    <div class="col-12 col-xl-4"><input type="number" id="buy-sum" oninput="calculate();" class="App-input w-100 App-big-text"
+        placeholder="сумма покупки" /></div>
+  </div>
+  <div class="row align-items-center my-5">
+    <div class="col-6 col-xl-4">
+      <div class="App-big-text app-text-48 bold">Профит</div>
+    </div>
+    <div class="col-6 col-xl-4">
+      <div class="App-big-text app-text-48 bold" id="profit">
+        0 ₽
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+  function changeCom(event) {
+    if (event.id == 'buy-minus') {
+      let value = document.getElementById('buy-com').value.slice(0, -1)
+      value = parseFloat(value) - 0.01
+      if (value < 0) {
+        value = 0.00;
+      }
+      document.getElementById('buy-com').value = parseFloat(value).toFixed(2) + '%';
+      return
+    }
+    if (event.id == 'buy-plus') {
+      let value = document.getElementById('buy-com').value.slice(0, -1)
+      value = parseFloat(parseFloat(value) + 0.01).toFixed(2) + '%';
+      document.getElementById('buy-com').value = value;
+      return
+    }
+    if (event.id == 'sell-minus') {
+      let value = document.getElementById('sell-com').value.slice(0, -1);
+      value = parseFloat(value) - 0.01;
+      if (value < 0) {
+        value = 0.00;
+      }
+      document.getElementById('sell-com').value = parseFloat(value).toFixed(2) + '%';
+      return
+    }
+    if (event.id == 'sell-plus') {
+      let value = document.getElementById('sell-com').value.slice(0, -1)
+      value = parseFloat(parseFloat(value) + 0.01).toFixed(2) + '%';
+      document.getElementById('sell-com').value = value;
+      return
+    }
+  }
+  function buttonClick(event) {
+    let buy_course = document.getElementById('buy-course');
+    for (let i = 1; i < 5; i++) {
+      document.getElementById('btn-' + i).classList.remove('rounded-btn-active');
+    }
+    let item = document.getElementById(event.id);
+    item.classList.add('rounded-btn-active');
+    buy_course.value = item.value;
+    calculate();
+  }
+
+  function calculate() {
+    let buy_course = document.getElementById('buy-course');
+    let sell_course = document.getElementById('sell-course');
+    let buy_sum = document.getElementById('buy-sum');
+
+    let buy_com = document.getElementById('buy-com').value;
+    let sell_com = document.getElementById('sell-com').value;
+
+    let spred = document.getElementById('spred');
+
+    let profit = document.getElementById('profit');
+
+
+    if (buy_course.value === '' || sell_course.value === '') {
+      spred.textContent = '0 %';
+    } else {
+      let buy_course_value = parseFloat(buy_course.value);
+      let sell_course_value = parseFloat(sell_course.value);
+
+      let buy_com_val = parseFloat(buy_com.substring(0, buy_com.length - 1));
+      let sell_com_val = parseFloat(sell_com.substring(0, sell_com.length - 1));
+
+      let value = (((sell_course_value / buy_course_value) - 1) * 100) - (buy_com_val + sell_com_val);
+      spred.value = value.toFixed(2) + ' %';
+    }
+
+    if (buy_course.value === '' || sell_course.value === '' || buy_sum.value === '') {
+      profit.textContent = '0 ₽';
+    } else {
+      profit.textContent = (parseFloat(buy_sum.value) + (parseFloat(buy_sum.value) * parseFloat(spred.value.substring(0, spred.value.length - 2))) / 100).toFixed(2) + ' ₽';
+    }
+
+  }
+</script>
+{% endblock %}

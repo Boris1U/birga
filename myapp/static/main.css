@@ -1,0 +1,110 @@
+.rounded-btn {
+    border-radius: 8px;
+    background-color: rgb(12, 12, 12);
+    color: white;
+    opacity: 0.5;
+    font-weight: 500;
+    font-size: 1em;
+    /* border-color: var(--main-color); */
+    border-style: none;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding: 1em 0.5em;
+    transition-duration: 0.4s;
+    line-height: 1.5;
+    appearance: textarea;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+a.rounded-btn{
+    text-decoration: none;
+}
+
+.rounded-btn-active,
+.rounded-btn:hover,
+.rounded-btn:active,
+.rounded-btn:checked,
+.rounded-btn:visited {
+    background-color: var(--main-color);
+    opacity: 1;
+}
+
+.rounded-btn:disabled,
+.rounded-btn[disabled]{
+    background-color: var(--main-color);
+    color: white;
+}
+
+.App-big-text {
+    margin: 0;
+    color: white;
+    text-decoration: none;
+    font-size: 28px;
+    line-height: 2rem;
+}
+
+.App-com-input {
+    background-color: transparent;
+    color: white;
+    border: 0;
+    width: 55px;
+    padding-bottom: 10px;
+    height: 28px;
+    align-self: center;
+}
+.hided {
+    display: none;
+}
+/* 
+.history-items {
+    max-height: 80vmin;
+} */
+
+.lh-44 {
+    line-height: 44px !important;
+}
+/* 
+.row {
+    height: 100px;
+} */
+
+
+.my-styled-card {
+    background: linear-gradient(114.65deg, rgba(12, 12, 12, 0.5) 48.15%, rgba(14, 209, 209, 0.5) 218.8%, rgba(14, 209, 209, 0.5) 258.96%);
+    backdrop-filter: blur(15px);
+    /* Note: backdrop-filter has minimal browser support */
+    
+    border-radius: 8px;
+}
+
+.profile-card {
+    background: rgba(12, 12, 12, 0.4);
+    backdrop-filter: blur(25px);
+    /* Note: backdrop-filter has minimal browser support */
+    border-radius: 34px;
+    padding: 30px 140px;
+    margin: 100px 0;
+}
+
+.subs-card {
+    background: linear-gradient(114.65deg, rgba(12, 12, 12, 0.5) 48.15%, rgba(14, 209, 209, 0.5) 218.8%, rgba(14, 209, 209, 0.5) 258.96%);
+    backdrop-filter: blur(15px);
+    /* Note: backdrop-filter has minimal browser support */
+    height: 428px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* .vector {
+    position: fixed;
+    position: device-fixed;
+    bottom: 8%;
+    right: 5%;
+} */
+
+.subs-card:hover{
+    background: rgba(12, 12, 12, 0.8);
+    box-shadow: 5px 9px 22px rgba(0, 0, 0, 0.25);
+    transition: all 1s cubic-bezier(0, 0, 0.2, 1);
+}
